@@ -11,6 +11,10 @@ const navigationItems = [
 function MainLayout() {
 	return (
 		<div className="app-shell">
+			<header className="app-brand-static" aria-label="Identité GuardDrive">
+				<img src="/logo.png" alt="GuardDrive" className="app-brand-static__logo" />
+			</header>
+
 			<main className="app-content">
 				<Outlet />
 			</main>
