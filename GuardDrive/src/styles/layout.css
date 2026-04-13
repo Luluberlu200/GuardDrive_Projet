@@ -1,0 +1,111 @@
+:root {
+	color-scheme: dark;
+	font-family: Inter, 'Segoe UI', sans-serif;
+	background: #07111f;
+	color: #f5f7fb;
+}
+
+html,
+body,
+#root {
+	min-height: 100%;
+}
+
+body {
+	background:
+		radial-gradient(circle at top, rgba(236, 72, 153, 0.14), transparent 30%),
+		linear-gradient(180deg, #0b1220 0%, #07111f 100%);
+	color: #f5f7fb;
+}
+
+.app-shell {
+	min-height: 100vh;
+}
+
+.app-content {
+	padding: 24px 12px calc(108px + env(safe-area-inset-bottom));
+}
+
+.app-content--auth {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-bottom: 24px;
+}
+
+.app-card {
+	background: rgba(15, 23, 42, 0.82);
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	border-radius: 24px;
+	box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+	backdrop-filter: blur(14px);
+	padding: 24px;
+	min-height: calc(100vh - 132px);
+}
+
+.app-card--auth {
+	min-height: min(420px, calc(100vh - 48px));
+	width: min(100%, 480px);
+}
+
+.app-card h1 {
+	margin: 0;
+	font-size: clamp(2rem, 4vw, 3rem);
+	line-height: 1.1;
+}
+
+.mobile-navbar {
+	position: fixed;
+	left: 50%;
+	bottom: 16px;
+	transform: translateX(-50%);
+	width: min(calc(100% - 24px), 720px);
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	gap: 8px;
+	padding: 10px;
+	border-radius: 20px;
+	background: rgba(15, 23, 42, 0.92);
+	border: 1px solid rgba(148, 163, 184, 0.2);
+	backdrop-filter: blur(18px);
+	box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+	z-index: 100;
+}
+
+.mobile-navbar__link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 48px;
+	padding: 10px 8px;
+	border-radius: 14px;
+	text-decoration: none;
+	font-size: 0.85rem;
+	font-weight: 600;
+	color: #cbd5e1;
+	transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.mobile-navbar__link:hover {
+	background: rgba(51, 65, 85, 0.7);
+	color: #ffffff;
+}
+
+.mobile-navbar__link--active {
+	background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+	color: #ffffff;
+}
+
+@media (min-width: 768px) {
+	.app-content {
+		padding: 32px 20px calc(120px + env(safe-area-inset-bottom));
+	}
+
+	.app-card {
+		padding: 32px;
+	}
+
+	.mobile-navbar {
+		bottom: 24px;
+	}
+}
