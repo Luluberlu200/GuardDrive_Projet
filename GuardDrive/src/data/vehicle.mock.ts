@@ -17,9 +17,9 @@ export type RecentAlert = {
 
 export const mockVehicle: VehicleData = {
 	name: 'Renault Clio — AB-123-CD',
-	fuel: 62,
-	battery: 85,
-	lock: 'locked',
+	fuel: 100,
+	battery: 50,
+	lock: 'unlocked',
 	lastUpdate: '2026-04-13 09:15',
 };
 
