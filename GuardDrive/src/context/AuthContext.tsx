@@ -37,7 +37,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
     };
     mockUsers.push(newUser);
-    setUser(newUser);
     return true;
   }
 
