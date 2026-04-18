@@ -75,12 +75,11 @@ export default function Register() {
     if (password !== confirmPassword) { setError('Les mots de passe ne correspondent pas'); return; }
 
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
 
-    const success = register(name, email, password);
+    const success = await register(name, email, password);
 
     if (success) {
-      navigate('/login');
+      navigate('/dashboard');
     } else {
       setError('Cet email est déjà utilisé');
       setLoading(false);

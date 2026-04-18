@@ -66,9 +66,8 @@ export default function Login() {
     }
 
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
 
-    const success = login(email, password);
+    const success = await login(email, password);
 
     if (success) {
       navigate('/dashboard');
