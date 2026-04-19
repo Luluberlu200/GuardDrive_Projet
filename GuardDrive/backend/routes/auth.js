@@ -32,4 +32,19 @@ router.get('/me', require('../middleware/auth'), async (req, res) => {
   res.json(user);
 });
 
+router.patch('/me', require('../middleware/auth'), async (req, res) => {
+  const { name, email } = req.body;
+  const update = {};
+  if (name) update.name = name;
+  if (email) update.email = email;
+
+  if (email) {
+    const existing = await User.findOne({ email, _id: { $ne: req.userId } });
+    if (existing) return res.status(409).json({ message: 'Email déjà utilisé' });
+  }
+
+  const user = await User.findByIdAndUpdate(req.userId, update, { new: true }).select('-password');
+  res.json({ id: user._id, name: user.name, email: user.email });
+});
+
 module.exports = router;

@@ -1,14 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
+import { useVehicle } from '../context/VehicleContext';
 import '../styles/dashboard.css';
-
-type Vehicle = {
-  name: string;
-  fuel: number;
-  battery: number;
-  lock: 'locked' | 'unlocked';
-};
 
 type Alert = {
   _id: string;
@@ -19,11 +13,10 @@ type Alert = {
 
 function Dashboard() {
   const navigate = useNavigate();
-  const [vehicule, setVehicule] = useState<Vehicle | null>(null);
+  const { activeVehicle: vehicule, loading } = useVehicle();
   const [alertes, setAlertes] = useState<Alert[]>([]);
 
   useEffect(() => {
-    api.get('/vehicle').then(setVehicule);
     api.get('/alerts').then((data) => setAlertes(data.slice(0, 3)));
   }, []);
 
@@ -33,7 +26,7 @@ function Dashboard() {
     return 'Information';
   }
 
-  if (!vehicule) return <div className="tableau-bord-page"><p style={{ padding: '2rem', color: '#f5f7fb' }}>Chargement...</p></div>;
+  if (loading || !vehicule) return <div className="tableau-bord-page"><p style={{ padding: '2rem', color: '#f5f7fb' }}>Chargement...</p></div>;
 
   return (
     <div className="tableau-bord-page">

@@ -1,12 +1,21 @@
 :root {
-	--couleur-fond-principal: #0f1114;
-	--couleur-fond-carte: #171a1f;
-	--couleur-fond-carte-hover: #1c2026;
-	--couleur-bordure: #2b3139;
-	--couleur-texte: #f2f4f7;
-	--couleur-texte-secondaire: #a4acb8;
-	--couleur-texte-faible: #7b8390;
-	--couleur-accent: #d4d9e1;
+	--dash-bg-gradient: linear-gradient(180deg, #0f1114 0%, #111419 50%, #0f1114 100%);
+	--dash-batterie-bg: #11151b;
+	--dash-batterie-border: #515a67;
+	--dash-btn-bg: #232931;
+	--dash-btn-border: #353d47;
+	--dash-btn-text: #dbe1ea;
+	--dash-btn-hover: #2b323b;
+}
+
+[data-theme="light"] {
+	--dash-bg-gradient: linear-gradient(180deg, #f0f2f5 0%, #e8ebef 50%, #f0f2f5 100%);
+	--dash-batterie-bg: #e8ebef;
+	--dash-batterie-border: #b0b8c4;
+	--dash-btn-bg: #edf0f4;
+	--dash-btn-border: #c8cfd8;
+	--dash-btn-text: #3a4555;
+	--dash-btn-hover: #e2e6ec;
 }
 
 .tableau-bord-page {
@@ -15,7 +24,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-	background: linear-gradient(180deg, #0f1114 0%, #111419 50%, #0f1114 100%);
+	background: var(--dash-bg-gradient);
 	color: var(--couleur-texte);
 }
 
@@ -177,20 +186,20 @@
 	width: 100%;
 	max-width: 230px;
 	height: 40px;
-	border: 2px solid #515a67;
+	border: 2px solid var(--dash-batterie-border);
 	border-radius: 8px;
 	border-right: none;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	overflow: hidden;
-	background: #11151b;
+	background: var(--dash-batterie-bg);
 }
 
 .batterie-borne {
 	width: 8px;
 	height: 20px;
-	background: #515a67;
+	background: var(--dash-batterie-border);
 	border-radius: 0 4px 4px 0;
 	flex-shrink: 0;
 }
@@ -238,9 +247,9 @@
 }
 
 .section-alertes__entete button {
-	background: #232931;
-	border: 1px solid #353d47;
-	color: #dbe1ea;
+	background: var(--dash-btn-bg);
+	border: 1px solid var(--dash-btn-border);
+	color: var(--dash-btn-text);
 	font-size: 0.78rem;
 	font-weight: 600;
 	padding: 7px 12px;
@@ -250,7 +259,7 @@
 }
 
 .section-alertes__entete button:hover {
-	background: #2b323b;
+	background: var(--dash-btn-hover);
 }
 
 .section-alertes__vide {

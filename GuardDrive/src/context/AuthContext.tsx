@@ -12,6 +12,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   register: (name: string, email: string, password: string) => Promise<boolean>;
+  updateUser: (data: Partial<User>) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -46,8 +47,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
+  function updateUser(data: Partial<User>) {
+    const updated = { ...user, ...data } as User;
+    localStorage.setItem('user', JSON.stringify(updated));
+    setUser(updated);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider value={{ user, login, logout, register, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

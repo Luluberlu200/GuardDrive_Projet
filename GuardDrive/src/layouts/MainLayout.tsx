@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { VehicleProvider } from '../context/VehicleContext';
 
 const navigationItems = [
 	{ to: '/dashboard', label: 'Accueil' },
@@ -15,9 +16,11 @@ function MainLayout() {
 				<img src="/logo.png" alt="GuardDrive" className="app-brand-static__logo" />
 			</header>
 
-			<main className="app-content">
-				<Outlet />
-			</main>
+			<VehicleProvider>
+				<main className="app-content">
+					<Outlet />
+				</main>
+			</VehicleProvider>
 
 			<nav className="mobile-navbar" aria-label="Navigation principale">
 				{navigationItems.map((item) => (
