@@ -7,6 +7,7 @@ interface AlertListProps {
   isLoading: boolean;
   onArchive: (id: string) => void;
   onDelete: (id: string) => void;
+  isArchivedView?: boolean;
 }
 
 export function AlertList({
@@ -14,6 +15,7 @@ export function AlertList({
   isLoading,
   onArchive,
   onDelete,
+  isArchivedView = false,
 }: AlertListProps) {
   if (isLoading) {
     return (
@@ -24,7 +26,7 @@ export function AlertList({
   }
 
   if (alerts.length === 0) {
-    return <EmptyState />;
+    return <EmptyState isArchivedView={isArchivedView} />;
   }
 
   return (
@@ -35,6 +37,7 @@ export function AlertList({
           alert={alert}
           onArchive={onArchive}
           onDelete={onDelete}
+          isArchivedView={isArchivedView}
         />
       ))}
     </div>

@@ -7,9 +7,10 @@ interface AlertCardProps {
   alert: Alert;
   onArchive: (id: string) => void;
   onDelete: (id: string) => void;
+  isArchivedView?: boolean;
 }
 
-export function AlertCard({ alert, onArchive, onDelete }: AlertCardProps) {
+export function AlertCard({ alert, onArchive, onDelete, isArchivedView = false }: AlertCardProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('fr-FR', {
@@ -38,6 +39,7 @@ export function AlertCard({ alert, onArchive, onDelete }: AlertCardProps) {
         alertId={alert.id}
         onArchive={onArchive}
         onDelete={onDelete}
+        isArchivedView={isArchivedView}
       />
     </div>
   );
