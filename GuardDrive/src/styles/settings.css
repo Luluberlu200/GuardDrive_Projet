@@ -1,0 +1,452 @@
+/* ── Input CSS vars ── */
+:root {
+  --input-bg: rgba(24, 28, 34, 0.95);
+  --input-border: #313741;
+}
+[data-theme="light"] {
+  --input-bg: rgba(255, 255, 255, 0.9);
+  --input-border: #c8cfd8;
+}
+
+/* ── Page root ── */
+.sp {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Hero ── */
+.sp-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--t-page-bg);
+  border: 1px solid var(--t-page-border);
+  border-radius: 18px;
+  padding: 20px;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.sp-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2c323b 0%, #3a424d 100%);
+  border: 1px solid #48515e;
+  color: #c8d0da;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .sp-avatar {
+  background: linear-gradient(135deg, #dce1e8 0%, #c8d0da 100%);
+  border-color: #b0b8c4;
+  color: #3a4555;
+}
+
+.sp-hero__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.sp-hero__name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 650;
+  color: var(--t-page-title);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sp-hero__email {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--t-page-subtitle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Group card ── */
+.sp-group {
+  background: var(--t-page-bg);
+  border: 1px solid var(--t-page-border);
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.sp-group__hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sp-group__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(164, 172, 184, 0.1);
+  border: 1px solid var(--t-page-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--couleur-texte-secondaire);
+  flex-shrink: 0;
+}
+
+.sp-group__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--couleur-texte-secondaire);
+}
+
+/* ── Form ── */
+.sp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sp-field__lbl {
+  font-size: 0.73rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--couleur-texte-secondaire);
+}
+
+.sp-field__inp {
+  width: 100%;
+  padding: 13px 15px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  color: var(--couleur-texte);
+  font-size: 0.95rem;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.25s ease;
+}
+
+.sp-field__inp::placeholder {
+  color: var(--couleur-texte-faible);
+}
+
+.sp-field__inp:focus {
+  outline: none;
+  border-color: #5a636f;
+  box-shadow: 0 0 0 3px rgba(90, 99, 111, 0.18);
+}
+
+/* ── Feedback messages ── */
+.sp-msg {
+  font-size: 0.84rem;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+
+.sp-msg--err {
+  color: #e57373;
+  background: rgba(229, 115, 115, 0.08);
+  border: 1px solid rgba(229, 115, 115, 0.2);
+}
+
+.sp-msg--ok {
+  color: #81c784;
+  background: rgba(129, 199, 132, 0.08);
+  border: 1px solid rgba(129, 199, 132, 0.2);
+}
+
+/* ── Buttons ── */
+.sp-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #2c323b 0%, #3a424d 100%);
+  border: 1px solid #48515e;
+  border-radius: 12px;
+  color: #f3f6fa;
+  font-size: 0.93rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  text-align: center;
+}
+
+.sp-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sp-btn:not(:disabled):hover {
+  background: linear-gradient(135deg, #343b45 0%, #47515e 100%);
+  transform: translateY(-1px);
+}
+
+.sp-btn--ghost {
+  background: transparent;
+  border-color: var(--couleur-bordure);
+  color: var(--couleur-texte-secondaire);
+}
+
+.sp-btn--ghost:not(:disabled):hover {
+  background: transparent;
+  border-color: #5a636f;
+  color: var(--couleur-texte);
+  transform: translateY(-1px);
+}
+
+/* ── Vehicle list ── */
+.sp-vlist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.sp-vitem {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--couleur-bordure);
+  transition: background 0.15s ease;
+}
+
+.sp-vitem:last-child {
+  border-bottom: none;
+}
+
+.sp-vitem--active {
+  background: rgba(129, 199, 132, 0.05);
+}
+
+.sp-vitem__body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: var(--couleur-texte);
+}
+
+.sp-vitem__check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--couleur-bordure);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #81c784;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.sp-vitem--active .sp-vitem__check {
+  border-color: #81c784;
+  background: rgba(129, 199, 132, 0.15);
+}
+
+.sp-vitem__name {
+  font-size: 0.93rem;
+  flex: 1;
+}
+
+.sp-vitem__pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #81c784;
+  background: rgba(129, 199, 132, 0.1);
+  border: 1px solid rgba(129, 199, 132, 0.22);
+  border-radius: 999px;
+  padding: 2px 9px;
+  flex-shrink: 0;
+}
+
+.sp-vitem__del {
+  padding: 0 14px;
+  background: none;
+  border: none;
+  border-left: 1px solid var(--couleur-bordure);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--couleur-texte-faible);
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.sp-vitem__del:not(:disabled):hover {
+  color: #e57373;
+  background: rgba(229, 115, 115, 0.07);
+}
+
+.sp-vitem__del--warn {
+  color: #e57373;
+}
+
+.sp-vitem__del:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+/* ── Add vehicle ── */
+.sp-add-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: 1.5px dashed var(--couleur-bordure);
+  border-radius: 12px;
+  color: var(--couleur-texte-secondaire);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.sp-add-trigger:hover {
+  border-color: #5a636f;
+  color: var(--couleur-texte);
+}
+
+.sp-add-trigger__plus {
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.sp-add {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sp-add__row {
+  display: flex;
+  gap: 10px;
+}
+
+.sp-add__row .sp-btn {
+  flex: 1;
+}
+
+/* ── Appearance row ── */
+.sp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sp-row__title {
+  margin: 0 0 4px;
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: var(--couleur-texte);
+}
+
+.sp-row__sub {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--couleur-texte-secondaire);
+}
+
+/* ── Toggle switch ── */
+.sp-toggle {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid var(--couleur-bordure);
+  background: rgba(164, 172, 184, 0.15);
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.sp-toggle--on {
+  background: rgba(74, 118, 89, 0.8);
+  border-color: #4a7659;
+}
+
+.sp-toggle__knob {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease;
+  display: block;
+}
+
+.sp-toggle--on .sp-toggle__knob {
+  transform: translateX(22px);
+}
+
+/* ── Compte / Déconnexion ── */
+.sp-group--danger {
+  padding: 0;
+  overflow: hidden;
+}
+
+.sp-logout {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  background: none;
+  border: none;
+  color: #e57373;
+  font-family: inherit;
+  font-size: 0.93rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.sp-logout:hover {
+  background: rgba(229, 115, 115, 0.07);
+}
