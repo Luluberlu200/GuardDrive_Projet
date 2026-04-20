@@ -11,6 +11,8 @@ export type Vehicle = {
   temperature: number;
   lastService: string;
   nextService: string;
+  lat: number;
+  lng: number;
 };
 
 type VehicleContextType = {
@@ -19,6 +21,7 @@ type VehicleContextType = {
   setActiveId: (id: string) => void;
   addVehicle: (name: string) => Promise<boolean>;
   deleteVehicle: (id: string) => Promise<boolean>;
+  updateLocation: (id: string, lat: number, lng: number) => Promise<boolean>;
   loading: boolean;
 };
 
@@ -55,6 +58,13 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
     return true;
   }
 
+  async function updateLocation(id: string, lat: number, lng: number): Promise<boolean> {
+    const data = await api.patch(`/vehicle/${id}/location`, { lat, lng });
+    if (data.lat == null) return false;
+    setVehicles(prev => prev.map(v => v._id === id ? { ...v, lat: data.lat, lng: data.lng } : v));
+    return true;
+  }
+
   async function deleteVehicle(id: string): Promise<boolean> {
     const data = await api.delete(`/vehicle/${id}`);
     if (!data.message) return false;
@@ -69,7 +79,7 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
   const activeVehicle = vehicles.find(v => v._id === activeId) ?? vehicles[0] ?? null;
 
   return (
-    <VehicleContext.Provider value={{ vehicles, activeVehicle, setActiveId, addVehicle, deleteVehicle, loading }}>
+    <VehicleContext.Provider value={{ vehicles, activeVehicle, setActiveId, addVehicle, deleteVehicle, updateLocation, loading }}>
       {children}
     </VehicleContext.Provider>
   );
