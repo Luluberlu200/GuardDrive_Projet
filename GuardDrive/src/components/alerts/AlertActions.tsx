@@ -24,14 +24,14 @@ export function AlertActions({
         onClick={() => onArchive(alertId)}
         title={isArchivedView ? "Remettre cette alerte en active" : "Archiver cette alerte"}
       >
-        {isArchivedView ? "Désarchiver" : "Archiver"}
+        📁 {isArchivedView ? "Désarchiver" : "Archiver"}
       </button>
       <button
         className="btn btn-danger"
         onClick={handleDeleteClick}
         title="Supprimer définitivement"
       >
-        Supprimer
+        🗑️ Supprimer
       </button>
     </div>
   );
