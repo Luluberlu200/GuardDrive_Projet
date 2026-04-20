@@ -10,6 +10,8 @@ const VehicleSchema = new mongoose.Schema({
   temperature: { type: Number, default: 21 },
   lastService: { type: String, default: '2024-10-01' },
   nextService: { type: String, default: '2025-04-01' },
+  lat: { type: Number, default: 48.8566 },
+  lng: { type: Number, default: 2.3522 },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Vehicle', VehicleSchema);

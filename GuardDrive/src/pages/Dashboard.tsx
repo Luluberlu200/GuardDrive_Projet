@@ -60,8 +60,6 @@ function Dashboard() {
                   <path d="M 10 68 A 50 50 0 0 1 110 68" fill="none" stroke="rgba(51,65,85,0.8)" strokeWidth="12" strokeLinecap="round" />
                   <path d="M 10 68 A 50 50 0 0 1 110 68" fill="none" stroke="url(#fuelGradient)" strokeWidth="12" strokeLinecap="round"
                     style={{ strokeDasharray: `${(vehicule.fuel / 100) * 157} 157` }} />
-                  <text x="6" y="80" fill="#64748b" fontSize="9" fontWeight="700">E</text>
-                  <text x="108" y="80" fill="#64748b" fontSize="9" fontWeight="700">F</text>
                   <text x="60" y="62" fill="#f5f7fb" fontSize="15" fontWeight="800" textAnchor="middle">{vehicule.fuel}%</text>
                 </svg>
               </div>

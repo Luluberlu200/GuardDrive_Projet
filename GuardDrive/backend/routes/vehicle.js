@@ -21,6 +21,18 @@ router.delete('/:id', protect, async (req, res) => {
   res.json({ message: 'Véhicule supprimé' });
 });
 
+router.patch('/:id/location', protect, async (req, res) => {
+  const { lat, lng } = req.body;
+  if (lat == null || lng == null) return res.status(400).json({ message: 'lat et lng requis' });
+  const vehicle = await Vehicle.findOneAndUpdate(
+    { _id: req.params.id, userId: req.userId },
+    { lat, lng },
+    { new: true }
+  );
+  if (!vehicle) return res.status(404).json({ message: 'Véhicule introuvable' });
+  res.json({ lat: vehicle.lat, lng: vehicle.lng });
+});
+
 router.patch('/:id/lock', protect, async (req, res) => {
   const vehicle = await Vehicle.findOne({ _id: req.params.id, userId: req.userId });
   if (!vehicle) return res.status(404).json({ message: 'Véhicule introuvable' });
