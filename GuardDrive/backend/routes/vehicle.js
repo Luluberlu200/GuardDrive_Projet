@@ -1,9 +1,11 @@
 const router = require('express').Router();
 const protect = require('../middleware/auth');
 const Vehicle = require('../models/Vehicle');
+const { applyRules } = require('../services/alertRules');
 
 router.get('/', protect, async (req, res) => {
   const vehicles = await Vehicle.find({ userId: req.userId });
+  applyRules(req.userId, vehicles).catch(() => {});
   res.json(vehicles);
 });
 
