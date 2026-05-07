@@ -58,7 +58,7 @@ function MainLayout() {
 	return (
 		<div className="app-shell">
 			<header className="app-brand-static" aria-label="Identité GuardDrive">
-				<img src="/logo.png" alt="GuardDrive" className="app-brand-static__logo" />
+				<span className="app-brand-static__wordmark">Guard<span className="app-brand-static__accent">Drive</span></span>
 			</header>
 
 			<VehicleProvider>
@@ -77,7 +77,12 @@ function MainLayout() {
 							isActive ? 'mobile-navbar__link mobile-navbar__link--active' : 'mobile-navbar__link'
 						}
 					>
-						{item.icon}
+						{({ isActive }) => (
+							<span className="mobile-navbar__item">
+								{item.icon}
+								{isActive && <span className="mobile-navbar__label">{item.label}</span>}
+							</span>
+						)}
 					</NavLink>
 				))}
 			</nav>
