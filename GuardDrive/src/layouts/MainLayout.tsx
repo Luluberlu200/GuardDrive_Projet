@@ -58,7 +58,7 @@ function MainLayout() {
 	return (
 		<div className="app-shell">
 			<header className="app-brand-static" aria-label="Identité GuardDrive">
-				<img src="/logo.png" alt="GuardDrive" className="app-brand-static__logo" />
+				<span className="app-brand-static__wordmark">Guard<span className="app-brand-static__accent">Drive</span></span>
 			</header>
 
 			<VehicleProvider>

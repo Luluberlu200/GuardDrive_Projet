@@ -80,11 +80,17 @@ body {
 	align-items: center;
 }
 
-.app-brand-static__logo {
-	width: 34px;
-	height: 34px;
-	object-fit: contain;
-	display: block;
+.app-brand-static__wordmark {
+	font-family: 'Manrope', Inter, sans-serif;
+	font-size: 1.15rem;
+	font-weight: 800;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--couleur-texte);
+}
+
+.app-brand-static__accent {
+	color: #f7a8b8;
 }
 
 .app-content {
