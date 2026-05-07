@@ -77,7 +77,12 @@ function MainLayout() {
 							isActive ? 'mobile-navbar__link mobile-navbar__link--active' : 'mobile-navbar__link'
 						}
 					>
-						{item.icon}
+						{({ isActive }) => (
+							<span className="mobile-navbar__item">
+								{item.icon}
+								{isActive && <span className="mobile-navbar__label">{item.label}</span>}
+							</span>
+						)}
 					</NavLink>
 				))}
 			</nav>
