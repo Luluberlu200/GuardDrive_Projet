@@ -133,26 +133,17 @@ body {
 	gap: 10px;
 }
 
-.app-brand-static__logo {
-	width: 32px;
-	height: 32px;
-	object-fit: contain;
-	display: block;
-	filter: drop-shadow(0 2px 8px rgba(247, 100, 140, 0.25));
-}
-
 .app-brand-static__wordmark {
 	font-family: 'Manrope', Inter, sans-serif;
-	font-size: 1.1rem;
+	font-size: 1.15rem;
 	font-weight: 800;
-	letter-spacing: 0.18em;
+	letter-spacing: 0.06em;
 	text-transform: uppercase;
 	color: var(--couleur-texte);
-	user-select: none;
 }
 
 .app-brand-static__accent {
-	color: var(--t-accent);
+	color: #f7a8b8;
 }
 
 /* ── Contenu ── */
