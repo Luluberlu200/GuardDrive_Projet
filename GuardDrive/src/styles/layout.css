@@ -322,9 +322,13 @@ body {
 .mobile-navbar__label {
 	font-size: 0.60rem;
 	font-weight: 700;
-	letter-spacing: 0.06em;
+	letter-spacing: 0.02em;
 	text-transform: uppercase;
 	line-height: 1;
+	max-width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 /* ═══════════════════════════════════════════════════════════════

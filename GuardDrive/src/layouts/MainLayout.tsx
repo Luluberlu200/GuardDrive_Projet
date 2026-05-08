@@ -14,7 +14,7 @@ const navigationItems = [
 	},
 	{
 		to: '/localisation',
-		label: 'Localisation',
+		label: 'Carte',
 		icon: (
 			<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
 				<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
