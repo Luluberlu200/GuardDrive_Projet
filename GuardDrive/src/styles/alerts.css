@@ -68,8 +68,8 @@
 .al-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: var(--couleur-fond-carte);
-  border: 1px solid var(--couleur-bordure);
+  background: var(--t-page-bg);
+  border: 1px solid var(--t-page-border);
   border-radius: 14px;
   padding: 4px;
   gap: 4px;
@@ -118,8 +118,8 @@
 .al-chip {
   padding: 5px 12px;
   border-radius: 999px;
-  border: 1px solid var(--couleur-bordure);
-  background: var(--couleur-fond-carte);
+  border: 1px solid var(--t-page-border);
+  background: var(--t-page-bg);
   color: var(--couleur-texte-secondaire);
   font-family: inherit;
   font-size: 0.76rem;
@@ -148,10 +148,12 @@
 /* ── Alert card ── */
 .al-card {
   display: flex;
-  background: var(--couleur-fond-carte);
-  border: 1px solid var(--couleur-bordure);
+  background: var(--t-page-bg);
+  border: 1px solid var(--t-page-border);
   border-radius: 14px;
   overflow: hidden;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
   transition: border-color 0.18s ease, transform 0.15s ease;
 }
 

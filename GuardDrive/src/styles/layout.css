@@ -20,11 +20,11 @@
 	--t-text:           #f5f7fb;
 
 	/* Cartes */
-	--t-card:           rgba(18, 15, 24, 0.88);
+	--t-card:           rgba(18, 15, 24, 0.97);
 	--t-card-border:    rgba(247, 168, 184, 0.10);
 
 	/* Navbar */
-	--t-navbar:              rgba(12, 10, 18, 0.92);
+	--t-navbar:              rgba(12, 10, 18, 0.97);
 	--t-navbar-link:         #8a909c;
 	--t-navbar-link-hover-bg: rgba(247, 168, 184, 0.07);
 	--t-navbar-active-bg:    linear-gradient(135deg, #1c1020 0%, #251530 100%);
@@ -32,15 +32,15 @@
 	--t-navbar-active-text:  #f7a8b8;
 
 	/* Pages */
-	--t-page-bg:        rgba(18, 15, 24, 0.88);
+	--t-page-bg:        rgba(18, 15, 24, 0.97);
 	--t-page-border:    rgba(247, 168, 184, 0.10);
 	--t-page-title:     #f2f4f7;
 	--t-page-subtitle:  #888888;
 
 	/* Palette dashboard */
 	--couleur-fond-principal:   #08080e;
-	--couleur-fond-carte:       rgba(18, 15, 24, 0.90);
-	--couleur-fond-carte-hover: rgba(28, 22, 36, 0.95);
+	--couleur-fond-carte:       rgba(18, 15, 24, 0.97);
+	--couleur-fond-carte-hover: rgba(28, 22, 36, 0.99);
 	--couleur-bordure:          rgba(136, 136, 136, 0.18);
 	--couleur-texte:            #f2f4f7;
 	--couleur-texte-secondaire: #9a9aaa;
@@ -65,24 +65,24 @@
 
 	--t-text:           #1a0f1e;
 
-	--t-card:           rgba(255, 252, 255, 0.88);
+	--t-card:           rgba(255, 252, 255, 0.97);
 	--t-card-border:    rgba(184, 48, 90, 0.14);
 
-	--t-navbar:              rgba(248, 244, 252, 0.94);
+	--t-navbar:              rgba(248, 244, 252, 0.97);
 	--t-navbar-link:         #7a6070;
 	--t-navbar-link-hover-bg: rgba(184, 48, 90, 0.07);
 	--t-navbar-active-bg:    linear-gradient(135deg, #f7eef4 0%, #ede0ea 100%);
 	--t-navbar-active-border: rgba(184, 48, 90, 0.28);
 	--t-navbar-active-text:  #b8305a;
 
-	--t-page-bg:        rgba(255, 252, 255, 0.92);
+	--t-page-bg:        rgba(255, 252, 255, 0.97);
 	--t-page-border:    rgba(184, 48, 90, 0.14);
 	--t-page-title:     #1a0f1e;
 	--t-page-subtitle:  #7a6070;
 
 	--couleur-fond-principal:   #ede8f2;
-	--couleur-fond-carte:       rgba(255, 252, 255, 0.90);
-	--couleur-fond-carte-hover: rgba(248, 242, 252, 0.98);
+	--couleur-fond-carte:       rgba(255, 252, 255, 0.97);
+	--couleur-fond-carte-hover: rgba(248, 242, 252, 0.99);
 	--couleur-bordure:          rgba(184, 48, 90, 0.14);
 	--couleur-texte:            #1a0f1e;
 	--couleur-texte-secondaire: #7a6070;
@@ -123,7 +123,7 @@
 	height: 100%;
 	z-index: 0;
 	pointer-events: none;
-	opacity: 0.55;
+	opacity: 0.30;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -176,6 +176,7 @@ body {
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
 	color: var(--couleur-texte);
+	text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 
 .app-brand-static__accent {
