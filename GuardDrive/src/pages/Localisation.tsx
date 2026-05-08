@@ -2,6 +2,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { HoneycombBg } from '../components/HoneycombBg';
 import { useVehicle } from '../context/VehicleContext';
 import '../styles/localisation.css';
 
@@ -71,15 +72,20 @@ function Localisation() {
 
 	if (loading) {
 		return (
+			<>
+			<HoneycombBg className="hc-bg-fixed" />
 			<div className="loc">
 				<div className="loc-map loc-map--loading">
 					<p>Chargement…</p>
 				</div>
 			</div>
+			</>
 		);
 	}
 
 	return (
+		<>
+		<HoneycombBg className="hc-bg-fixed" />
 		<div className="loc">
 			<div className="loc-map">
 				<MapContainer center={[lat, lng]} zoom={15} style={{ height: '100%', width: '100%' }} zoomControl={false}>
@@ -111,6 +117,7 @@ function Localisation() {
 				</div>
 			</div>
 		</div>
+		</>
 	);
 }
 

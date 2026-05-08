@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { useVehicle } from '../context/VehicleContext';
@@ -262,7 +261,7 @@ function Dashboard() {
   if (loading || !v) {
     return (
       <>
-        <HoneycombBg className="db-hc-bg" />
+        <HoneycombBg className="hc-bg-fixed" />
         <div className="db-page">
           <p style={{ padding: '2rem', color: 'var(--couleur-texte-faible)' }}>Chargement…</p>
         </div>
@@ -276,7 +275,7 @@ function Dashboard() {
 
   return (
     <>
-      <HoneycombBg className="db-hc-bg" />
+      <HoneycombBg className="hc-bg-fixed" />
 
       <div className="db-page">
 

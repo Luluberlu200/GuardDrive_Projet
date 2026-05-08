@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { HoneycombBg } from '../components/HoneycombBg';
 import { useAuth } from '../context/AuthContext';
 import { useVehicle } from '../context/VehicleContext';
 import { api } from '../services/api';
@@ -99,6 +100,8 @@ function Settings() {
 	}
 
 	return (
+		<>
+		<HoneycombBg className="hc-bg-fixed" />
 		<div className="sp">
 
 			{/* ── Identity hero ── */}
@@ -224,6 +227,7 @@ function Settings() {
 			</div>
 
 		</div>
+		</>
 	);
 }
 

@@ -1,16 +1,30 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { api } from '../services/api';
 
+export type Trip = {
+  date: string;
+  distance: number;
+  duration: number;
+  from: string;
+  to: string;
+};
+
 export type Vehicle = {
   _id: string;
   name: string;
+  plateNumber: string;
+  mileage: number;
   fuel: number;
   battery: number;
   lock: 'locked' | 'unlocked';
   tirePressure: number;
+  tireWear: { fl: number; fr: number; rl: number; rr: number };
+  tirePressureWheels: { fl: number; fr: number; rl: number; rr: number };
   temperature: number;
   lastService: string;
   nextService: string;
+  controleTechnique: string;
+  trips: Trip[];
   lat: number;
   lng: number;
 };
@@ -23,6 +37,7 @@ type VehicleContextType = {
   deleteVehicle: (id: string) => Promise<boolean>;
   updateLocation: (id: string, lat: number, lng: number) => Promise<boolean>;
   toggleLock: (id: string) => Promise<boolean>;
+  updateVehicle: (id: string, data: Partial<Vehicle>) => Promise<boolean>;
   loading: boolean;
 };
 
@@ -66,6 +81,13 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
     return true;
   }
 
+  async function updateVehicle(id: string, data: Partial<Vehicle>): Promise<boolean> {
+    const updated = await api.patch(`/vehicle/${id}`, data);
+    if (!updated._id) return false;
+    setVehicles(prev => prev.map(v => v._id === id ? { ...v, ...updated } : v));
+    return true;
+  }
+
   async function toggleLock(id: string): Promise<boolean> {
     const data = await api.patch(`/vehicle/${id}/lock`, {});
     if (!data.lock) return false;
@@ -87,7 +109,7 @@ export function VehicleProvider({ children }: { children: ReactNode }) {
   const activeVehicle = vehicles.find(v => v._id === activeId) ?? vehicles[0] ?? null;
 
   return (
-    <VehicleContext.Provider value={{ vehicles, activeVehicle, setActiveId, addVehicle, deleteVehicle, updateLocation, toggleLock, loading }}>
+    <VehicleContext.Provider value={{ vehicles, activeVehicle, setActiveId, addVehicle, deleteVehicle, updateLocation, toggleLock, updateVehicle, loading }}>
       {children}
     </VehicleContext.Provider>
   );

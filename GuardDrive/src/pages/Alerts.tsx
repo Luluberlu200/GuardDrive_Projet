@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { HoneycombBg } from '../components/HoneycombBg';
 import { AlertList } from '../components/alerts/AlertList';
 import { mockAlerts } from '../data/mockAlerts';
 import type { Alert } from '../types/alert';
@@ -22,6 +23,8 @@ export default function Alerts() {
   const activeAlerts = alerts.filter((alert) => alert.status === 'active');
 
   return (
+    <>
+    <HoneycombBg className="hc-bg-fixed" />
     <div className="page-alerts">
       <h1>Alertes</h1>
 
@@ -32,5 +35,6 @@ export default function Alerts() {
         onDelete={handleDelete}
       />
     </div>
+    </>
   );
 }

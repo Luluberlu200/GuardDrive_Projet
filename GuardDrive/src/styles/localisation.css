@@ -80,16 +80,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 14px 12px;
+  gap: 6px;
+  padding: 12px 8px;
   background: var(--couleur-fond-carte);
   border: 1px solid var(--couleur-bordure);
   border-radius: 14px;
   color: var(--couleur-texte-secondaire);
   font-family: inherit;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
   transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
 }
 
