@@ -1,14 +1,24 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { HoneycombBg } from '../components/HoneycombBg';
 import { useVehicle } from '../context/VehicleContext';
 import '../styles/localisation.css';
 
-const markerIcon = L.divIcon({
+/* ── Marqueur véhicule (vert pulsant) ── */
+const vehicleIcon = L.divIcon({
 	className: '',
 	html: `<div class="loc-marker"><div class="loc-marker__ring"></div><div class="loc-marker__dot"></div></div>`,
+	iconSize: [20, 20],
+	iconAnchor: [10, 10],
+	popupAnchor: [0, -12],
+});
+
+/* ── Marqueur utilisateur (bleu) ── */
+const userIcon = L.divIcon({
+	className: '',
+	html: `<div class="loc-user-marker"><div class="loc-user-marker__ring"></div><div class="loc-user-marker__dot"></div></div>`,
 	iconSize: [20, 20],
 	iconAnchor: [10, 10],
 	popupAnchor: [0, -12],
@@ -23,6 +33,13 @@ async function reverseGeocode(lat: number, lng: number): Promise<string> {
 	const a = data.address ?? {};
 	const parts = [a.road, a.house_number, a.city ?? a.town ?? a.village].filter(Boolean);
 	return parts.length ? parts.join(' ') : data.display_name ?? 'Adresse inconnue';
+}
+
+/* ── Recentre la carte quand le véhicule change ── */
+function MapRecenter({ lat, lng }: { lat: number; lng: number }) {
+	const map = useMap();
+	useEffect(() => { map.setView([lat, lng], map.getZoom()); }, [lat, lng]);
+	return null;
 }
 
 function IconHorn() {
@@ -51,19 +68,45 @@ function IconLight() {
 	);
 }
 
+function IconMyLocation() {
+	return (
+		<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+			<circle cx="12" cy="12" r="3" />
+			<path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+			<path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" />
+		</svg>
+	);
+}
+
 function Localisation() {
 	const { activeVehicle, loading } = useVehicle();
-	const [address, setAddress] = useState('Chargement de l\'adresse…');
+	const [address, setAddress] = useState('Chargement…');
 	const [hornActive, setHornActive] = useState(false);
 	const [lightsActive, setLightsActive] = useState(false);
+	const [userPos, setUserPos] = useState<{ lat: number; lng: number } | null>(null);
+	const [userLocError, setUserLocError] = useState(false);
 
-	const lat = activeVehicle?.lat ?? 48.8566;
-	const lng = activeVehicle?.lng ?? 2.3522;
+	const vLat = activeVehicle?.lat ?? 48.8566;
+	const vLng = activeVehicle?.lng ?? 2.3522;
 
 	useEffect(() => {
-		setAddress('Chargement de l\'adresse…');
-		reverseGeocode(lat, lng).then(setAddress);
-	}, [lat, lng]);
+		setAddress('Chargement…');
+		reverseGeocode(vLat, vLng).then(setAddress);
+	}, [vLat, vLng]);
+
+	/* Géolocalisation de l'utilisateur */
+	useEffect(() => {
+		if (!navigator.geolocation) return;
+		const watchId = navigator.geolocation.watchPosition(
+			pos => {
+				setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+				setUserLocError(false);
+			},
+			() => setUserLocError(true),
+			{ enableHighAccuracy: true, maximumAge: 10000 }
+		);
+		return () => navigator.geolocation.clearWatch(watchId);
+	}, []);
 
 	function handleHorn() {
 		setHornActive(true);
@@ -73,50 +116,78 @@ function Localisation() {
 	if (loading) {
 		return (
 			<>
-			<HoneycombBg className="hc-bg-fixed" />
-			<div className="loc">
-				<div className="loc-map loc-map--loading">
-					<p>Chargement…</p>
+				<HoneycombBg className="hc-bg-fixed" />
+				<div className="loc">
+					<div className="loc-map loc-map--loading"><p>Chargement…</p></div>
 				</div>
-			</div>
 			</>
 		);
 	}
 
 	return (
 		<>
-		<HoneycombBg className="hc-bg-fixed" />
-		<div className="loc">
-			<div className="loc-map">
-				<MapContainer center={[lat, lng]} zoom={15} style={{ height: '100%', width: '100%' }} zoomControl={false}>
-					<TileLayer
-						url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-						attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-					/>
-					<Marker position={[lat, lng]} icon={markerIcon}>
-						<Popup>{activeVehicle?.name ?? 'Véhicule'}</Popup>
-					</Marker>
-				</MapContainer>
-			</div>
+			<HoneycombBg className="hc-bg-fixed" />
+			<div className="loc">
+				<div className="loc-map">
+					<MapContainer center={[vLat, vLng]} zoom={15} style={{ height: '100%', width: '100%' }} zoomControl={false}>
+						<TileLayer
+							url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+							attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+						/>
+						<MapRecenter lat={vLat} lng={vLng} />
 
-			<div className="loc-card">
-				<div className="loc-card__info">
-					<p className="loc-card__name">{activeVehicle?.name ?? '—'}</p>
-					<p className="loc-card__address">{address}</p>
+						{/* Marqueur véhicule */}
+						<Marker position={[vLat, vLng]} icon={vehicleIcon}>
+							<Popup>{activeVehicle?.name ?? 'Véhicule'}</Popup>
+						</Marker>
+
+						{/* Marqueur utilisateur */}
+						{userPos && (
+							<Marker position={[userPos.lat, userPos.lng]} icon={userIcon}>
+								<Popup>Ma position</Popup>
+							</Marker>
+						)}
+					</MapContainer>
+
+					{/* Légende */}
+					{userPos && (
+						<div className="loc-legend">
+							<span className="loc-legend__item loc-legend__item--vehicle">
+								<span className="loc-legend__dot loc-legend__dot--vehicle" /> {activeVehicle?.name ?? 'Véhicule'}
+							</span>
+							<span className="loc-legend__item loc-legend__item--user">
+								<span className="loc-legend__dot loc-legend__dot--user" /> Moi
+							</span>
+						</div>
+					)}
+					{userLocError && (
+						<div className="loc-hint">Géolocalisation non disponible</div>
+					)}
 				</div>
 
-				<div className="loc-actions">
-					<button className={`loc-action${hornActive ? ' loc-action--active' : ''}`} onClick={handleHorn}>
-						<IconHorn />
-						<span>Klaxonner</span>
-					</button>
-					<button className={`loc-action${lightsActive ? ' loc-action--on' : ''}`} onClick={() => setLightsActive(v => !v)}>
-						<IconLight />
-						<span>{lightsActive ? 'Éteindre' : 'Phares'}</span>
-					</button>
+				<div className="loc-card">
+					<div className="loc-card__info">
+						<p className="loc-card__name">{activeVehicle?.name ?? '—'}</p>
+						<p className="loc-card__address">{address}</p>
+						{userPos && (
+							<p className="loc-card__user-pos">
+								<IconMyLocation /> Ma position active
+							</p>
+						)}
+					</div>
+
+					<div className="loc-actions">
+						<button className={`loc-action${hornActive ? ' loc-action--active' : ''}`} onClick={handleHorn}>
+							<IconHorn />
+							<span>Klaxonner</span>
+						</button>
+						<button className={`loc-action${lightsActive ? ' loc-action--on' : ''}`} onClick={() => setLightsActive(v => !v)}>
+							<IconLight />
+							<span>{lightsActive ? 'Éteindre' : 'Phares'}</span>
+						</button>
+					</div>
 				</div>
 			</div>
-		</div>
 		</>
 	);
 }
