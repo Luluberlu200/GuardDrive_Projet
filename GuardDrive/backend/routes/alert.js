@@ -2,20 +2,52 @@ const router = require('express').Router();
 const protect = require('../middleware/auth');
 const Alert = require('../models/Alert');
 
+/* GET /api/alerts?status=active|archived */
 router.get('/', protect, async (req, res) => {
-  const alerts = await Alert.find({ userId: req.userId }).sort({ date: -1 });
+  const filter = { userId: req.userId };
+  if (req.query.status) filter.status = req.query.status;
+  const alerts = await Alert.find(filter).sort({ date: -1 });
   res.json(alerts);
 });
 
-router.patch('/:id/archive', protect, async (req, res) => {
+/* POST /api/alerts – créer une alerte (capteurs, tests) */
+router.post('/', protect, async (req, res) => {
+  const { type, message, vehicleId } = req.body;
+  const alert = await Alert.create({ userId: req.userId, type, message, vehicleId });
+  res.status(201).json(alert);
+});
+
+/* PATCH /api/alerts/:id/read */
+router.patch('/:id/read', protect, async (req, res) => {
   const alert = await Alert.findOneAndUpdate(
     { _id: req.params.id, userId: req.userId },
-    { status: 'archived' },
+    { read: true },
     { new: true }
   );
   res.json(alert);
 });
 
+/* PATCH /api/alerts/:id/archive */
+router.patch('/:id/archive', protect, async (req, res) => {
+  const alert = await Alert.findOneAndUpdate(
+    { _id: req.params.id, userId: req.userId },
+    { status: 'archived', read: true },
+    { new: true }
+  );
+  res.json(alert);
+});
+
+/* PATCH /api/alerts/:id/unarchive */
+router.patch('/:id/unarchive', protect, async (req, res) => {
+  const alert = await Alert.findOneAndUpdate(
+    { _id: req.params.id, userId: req.userId },
+    { status: 'active' },
+    { new: true }
+  );
+  res.json(alert);
+});
+
+/* DELETE /api/alerts/:id */
 router.delete('/:id', protect, async (req, res) => {
   await Alert.findOneAndDelete({ _id: req.params.id, userId: req.userId });
   res.json({ message: 'Supprimée' });

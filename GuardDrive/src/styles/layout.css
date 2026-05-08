@@ -58,6 +58,39 @@
 	--couleur-accent: #3a4555;
 }
 
+/* ── Honeycomb background ── */
+:root {
+	--hc-vignette:  rgba(4, 5, 8, 0.80);
+	--hex-stroke:   rgba(164, 172, 184, 0.07);
+	--hex-fill-t0:  rgba(15, 17, 20, 0.75);
+	--hex-fill-t1:  rgba(28, 32, 38, 0.88);
+	--hex-fill-t2:  rgba(55, 65, 80, 0.90);
+	--hex-glow-t2:  rgba(100, 130, 180, 0.40);
+}
+[data-theme="light"] {
+	--hc-vignette:  rgba(215, 220, 228, 0.45);
+	--hex-stroke:   rgba(100, 120, 150, 0.14);
+	--hex-fill-t0:  rgba(230, 234, 240, 0.45);
+	--hex-fill-t1:  rgba(240, 244, 248, 0.70);
+	--hex-fill-t2:  rgba(180, 200, 220, 0.50);
+	--hex-glow-t2:  rgba(80, 120, 180, 0.22);
+}
+
+.hc { stroke: var(--hex-stroke); stroke-width: 1; transition: fill 0.3s ease, stroke 0.3s ease; }
+.hc--t0 { fill: var(--hex-fill-t0); }
+.hc--t1 { fill: var(--hex-fill-t1); }
+.hc--t2 { fill: var(--hex-fill-t2); stroke: var(--hex-glow-t2); stroke-width: 1.5; filter: drop-shadow(0 0 6px var(--hex-glow-t2)); }
+
+.hc-bg-fixed {
+	position: fixed;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	pointer-events: none;
+	opacity: 0.45;
+}
+
 html,
 body,
 #root {
