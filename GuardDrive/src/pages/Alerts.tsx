@@ -48,13 +48,6 @@ function IconInfo() {
     </svg>
   );
 }
-function IconCheck() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
 function IconArchive() {
   return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -80,7 +73,7 @@ function IconRefresh() {
   );
 }
 
-const TYPE_ICON: Record<AlertType, JSX.Element> = {
+const TYPE_ICON: Record<AlertType, React.ReactElement> = {
   intrusion: <IconIntrusion />,
   warning:   <IconWarning />,
   info:      <IconInfo />,
@@ -88,10 +81,9 @@ const TYPE_ICON: Record<AlertType, JSX.Element> = {
 
 /* ── Alert card ── */
 function AlertCard({
-  alert, onRead, onArchive, onUnarchive, onDelete,
+  alert, onArchive, onUnarchive, onDelete,
 }: {
   alert: Alert;
-  onRead:      (id: string) => void;
   onArchive:   (id: string) => void;
   onUnarchive: (id: string) => void;
   onDelete:    (id: string) => void;
@@ -100,7 +92,7 @@ function AlertCard({
   const isArchived = alert.status === 'archived';
 
   return (
-    <div className={`al-card al-card--${alert.type}${alert.read ? '' : ' al-card--unread'}`}>
+    <div className={`al-card al-card--${alert.type}`}>
       <div className="al-card__stripe" />
       <div className="al-card__body">
         <div className="al-card__top">
@@ -114,15 +106,9 @@ function AlertCard({
             <p className="al-card__msg">{alert.message}</p>
             <span className="al-card__date">{timeAgo(alert.date)}</span>
           </div>
-          {!alert.read && <span className="al-card__dot" />}
         </div>
 
         <div className="al-card__actions">
-          {!alert.read && (
-            <button className="al-btn" onClick={() => onRead(alert._id)}>
-              <IconCheck /> Lire
-            </button>
-          )}
           {isArchived ? (
             <button className="al-btn" onClick={() => onUnarchive(alert._id)}>
               <IconArchive /> Restaurer
@@ -149,11 +135,11 @@ function AlertCard({
 type FilterKey = AlertType | 'all';
 
 export default function Alerts() {
-  const [alerts, setAlerts]     = useState<Alert[]>([]);
-  const [loading, setLoading]   = useState(true);
+  const [alerts, setAlerts]         = useState<Alert[]>([]);
+  const [loading, setLoading]       = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [tab, setTab]           = useState<AlertStatus>('active');
-  const [filter, setFilter]     = useState<FilterKey>('all');
+  const [tab, setTab]               = useState<AlertStatus>('active');
+  const [filter, setFilter]         = useState<FilterKey>('all');
 
   const load = useCallback(async (silent = false) => {
     silent ? setRefreshing(true) : setLoading(true);
@@ -172,13 +158,9 @@ export default function Alerts() {
     return () => clearInterval(id);
   }, [load]);
 
-  async function handleRead(id: string) {
-    await api.patch(`/alerts/${id}/read`);
-    setAlerts(prev => prev.map(a => a._id === id ? { ...a, read: true } : a));
-  }
   async function handleArchive(id: string) {
     await api.patch(`/alerts/${id}/archive`);
-    setAlerts(prev => prev.map(a => a._id === id ? { ...a, status: 'archived', read: true } : a));
+    setAlerts(prev => prev.map(a => a._id === id ? { ...a, status: 'archived' } : a));
   }
   async function handleUnarchive(id: string) {
     await api.patch(`/alerts/${id}/unarchive`);
@@ -191,7 +173,6 @@ export default function Alerts() {
 
   const active   = alerts.filter(a => a.status === 'active');
   const archived = alerts.filter(a => a.status === 'archived');
-  const unread   = active.filter(a => !a.read).length;
 
   const visible = (tab === 'active' ? active : archived)
     .filter(a => filter === 'all' || a.type === filter);
@@ -205,9 +186,6 @@ export default function Alerts() {
         <div className="al-header">
           <div className="al-header__left">
             <h2 className="al-header__title">Alertes</h2>
-            {unread > 0 && (
-              <span className="al-header__badge">{unread} non lu{unread > 1 ? 'es' : 'e'}</span>
-            )}
           </div>
           <button
             className={`al-refresh${refreshing ? ' al-refresh--spin' : ''}`}
@@ -248,12 +226,8 @@ export default function Alerts() {
           </div>
         ) : visible.length === 0 ? (
           <div className="al-empty">
-            <span className="al-empty__icon">{tab === 'active' ? '🛡️' : '📁'}</span>
             <p className="al-empty__title">
               {tab === 'active' ? 'Aucune alerte active' : 'Aucune alerte archivée'}
-            </p>
-            <p className="al-empty__sub">
-              {tab === 'active' ? 'Votre véhicule est protégé.' : 'Les alertes archivées apparaîtront ici.'}
             </p>
           </div>
         ) : (
@@ -262,7 +236,6 @@ export default function Alerts() {
               <AlertCard
                 key={alert._id}
                 alert={alert}
-                onRead={handleRead}
                 onArchive={handleArchive}
                 onUnarchive={handleUnarchive}
                 onDelete={handleDelete}
