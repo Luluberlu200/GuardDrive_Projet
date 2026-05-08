@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { HoneycombBg } from '../components/HoneycombBg';
 import { useVehicle } from '../context/VehicleContext';
 import '../styles/etat-vehicule.css';
@@ -26,31 +26,10 @@ function IconWrench() {
     </svg>
   );
 }
-function IconCalendar() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
-}
-function IconRoute() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
-    </svg>
-  );
-}
 function IconFileText() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" />
-    </svg>
-  );
-}
-function IconRoad() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 17l3-10h12l3 10M12 7v4M10 17h4" />
     </svg>
   );
 }
@@ -69,22 +48,51 @@ function tireWearColor(pct: number) {
   return '#81c784';
 }
 
-function tireWearClass(pct: number) {
-  if (pct < 30) return 'ev-row__val--danger';
-  if (pct < 60) return 'ev-row__val--warn';
-  return 'ev-row__val--ok';
-}
-
 function pressureColor(bar: number) {
   if (bar < 1.8 || bar > 3.2) return '#e57373';
   if (bar < 2.0 || bar > 2.8) return '#fbbf24';
   return '#81c784';
 }
 
-function pressureClass(bar: number) {
-  if (bar < 1.8 || bar > 3.2) return 'ev-row__val--danger';
-  if (bar < 2.0 || bar > 2.8) return 'ev-row__val--warn';
-  return 'ev-row__val--ok';
+/* ── Tire gauge (270° arc) ── */
+function TireGauge({ pct, color }: { pct: number; color: string }) {
+  const r = 26;
+  const circ = 2 * Math.PI * r;
+  const arcLen = circ * 0.75;
+  const filled = (pct / 100) * arcLen;
+  return (
+    <svg width="72" height="72" viewBox="0 0 70 70">
+      <g transform="rotate(135, 35, 35)">
+        <circle cx="35" cy="35" r={r} fill="none"
+          stroke="rgba(164,172,184,0.12)" strokeWidth="5.5"
+          strokeDasharray={`${arcLen} ${circ - arcLen}`}
+          strokeLinecap="round" />
+        <circle cx="35" cy="35" r={r} fill="none"
+          stroke={color} strokeWidth="5.5"
+          strokeDasharray={`${filled} ${circ - filled}`}
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dasharray 0.5s ease' }} />
+      </g>
+      <text x="35" y="36" textAnchor="middle" dominantBaseline="middle"
+        fontSize="13" fontWeight="700" fill="currentColor" fontFamily="inherit">
+        {pct}%
+      </text>
+    </svg>
+  );
+}
+
+function TireCard({ label, wear, pressure }: { label: string; wear: number; pressure: number }) {
+  const wColor = tireWearColor(wear);
+  const pColor = pressureColor(pressure);
+  return (
+    <div className="ev-tire-card">
+      <span className="ev-tire-card__pos">{label}</span>
+      <TireGauge pct={wear} color={wColor} />
+      <span className="ev-tire-card__pressure" style={{ color: pColor }}>
+        {pressure.toFixed(1)} bar
+      </span>
+    </div>
+  );
 }
 
 function fmtDate(d: string) {
@@ -106,9 +114,33 @@ function ctClass(days: number | null) {
   return 'ev-row__val--ok';
 }
 
-function fmtDuration(min: number) {
-  if (min < 60) return `${min} min`;
-  return `${Math.floor(min / 60)}h${String(min % 60).padStart(2, '0')}`;
+
+/* ── Document viewer modal ── */
+function DocModal({ data, name, onClose }: { data: string; name: string; onClose: () => void }) {
+  const isImage = data.startsWith('data:image');
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') onClose(); }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <div className="ev-modal-overlay" onClick={onClose}>
+      <div className="ev-modal" onClick={e => e.stopPropagation()}>
+        <div className="ev-modal__hd">
+          <span className="ev-modal__title">{name}</span>
+          <button className="ev-modal__close" onClick={onClose}>✕</button>
+        </div>
+        <div className="ev-modal__body">
+          {isImage
+            ? <img src={data} alt={name} className="ev-modal__img" />
+            : <iframe src={data} className="ev-modal__iframe" title={name} />
+          }
+        </div>
+      </div>
+    </div>
+  );
 }
 
 /* ── Document item ── */
@@ -116,10 +148,13 @@ function DocItem({ label, storageKey }: { label: string; storageKey: string }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const stored = localStorage.getItem(storageKey);
   const [hasFile, setHasFile] = useState(!!stored);
+  const [viewing, setViewing] = useState(false);
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (!file || file.type !== 'application/pdf') return;
+    if (!file) return;
+    const allowed = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+    if (!allowed.includes(file.type)) return;
     const reader = new FileReader();
     reader.onload = () => {
       localStorage.setItem(storageKey, reader.result as string);
@@ -129,37 +164,31 @@ function DocItem({ label, storageKey }: { label: string; storageKey: string }) {
     reader.readAsDataURL(file);
   }
 
-  function handleView() {
-    const data = localStorage.getItem(storageKey);
-    if (!data) return;
-    const win = window.open();
-    if (win) {
-      win.document.write(`<iframe src="${data}" style="width:100%;height:100vh;border:none"></iframe>`);
-    }
-  }
-
   const fileName = localStorage.getItem(`${storageKey}_name`);
+  const fileData = localStorage.getItem(storageKey);
 
   return (
-    <div className="ev-doc">
-      <div className="ev-doc__icon"><IconFileText /></div>
-      <div className="ev-doc__info">
-        <div className="ev-doc__name">{label}</div>
-        {hasFile
-          ? <div className="ev-doc__status ev-doc__status--ok">✓ {fileName ?? 'Fichier enregistré'}</div>
-          : <div className="ev-doc__status">Aucun document</div>
-        }
+    <>
+      <div className="ev-doc">
+        <div className="ev-doc__icon"><IconFileText /></div>
+        <div className="ev-doc__info">
+          <div className="ev-doc__name">{label}</div>
+          {!hasFile && <div className="ev-doc__status">Aucun document</div>}
+        </div>
+        <div className="ev-doc__actions">
+          {hasFile && (
+            <button className="ev-doc__btn" onClick={() => setViewing(true)}>Voir</button>
+          )}
+          <button className="ev-doc__btn ev-doc__btn--primary" onClick={() => fileRef.current?.click()}>
+            {hasFile ? 'Remplacer' : 'Importer'}
+          </button>
+          <input ref={fileRef} type="file" accept="application/pdf,image/png,image/jpeg" style={{ display: 'none' }} onChange={handleFile} />
+        </div>
       </div>
-      <div className="ev-doc__actions">
-        {hasFile && (
-          <button className="ev-doc__btn" onClick={handleView}>Voir</button>
-        )}
-        <button className="ev-doc__btn ev-doc__btn--primary" onClick={() => fileRef.current?.click()}>
-          {hasFile ? 'Remplacer' : 'Importer'}
-        </button>
-        <input ref={fileRef} type="file" accept="application/pdf" style={{ display: 'none' }} onChange={handleFile} />
-      </div>
-    </div>
+      {viewing && fileData && (
+        <DocModal data={fileData} name={fileName ?? label} onClose={() => setViewing(false)} />
+      )}
+    </>
   );
 }
 
@@ -223,8 +252,6 @@ function EtatVehicule() {
 
   const tw = v.tireWear ?? { fl: 80, fr: 80, rl: 75, rr: 75 };
   const tp = v.tirePressureWheels ?? { fl: 2.3, fr: 2.3, rl: 2.2, rr: 2.2 };
-  const nextCtDays = daysUntil(v.controleTechnique);
-
   return (
     <>
     <HoneycombBg className="hc-bg-fixed" />
@@ -248,7 +275,16 @@ function EtatVehicule() {
         </div>
         <div className="ev-grid2">
           <EditField label="Plaque d'immatriculation" value={v.plateNumber ?? ''} onSave={val => save('plateNumber', val.toUpperCase())} />
-          <EditField label="Kilométrage (km)" value={String(v.mileage ?? 0)} type="number" onSave={val => save('mileage', Number(val))} />
+          <div className="ev-field">
+            <span className="ev-field__lbl">Kilométrage total</span>
+            <div className="ev-field__readonly">{(v.mileage ?? 0).toLocaleString('fr-FR')} km</div>
+          </div>
+          <div className="ev-field">
+            <span className="ev-field__lbl">Dernier trajet</span>
+            <div className="ev-field__readonly">
+              {v.lastTripDistance > 0 ? `${v.lastTripDistance} km` : '—'}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -258,111 +294,43 @@ function EtatVehicule() {
           <span className="ev-card__icon"><IconTire /></span>
           <span className="ev-card__title">Pneus</span>
         </div>
-        <div className="ev-tires">
-          {([['fl', 'Avant G'], ['fr', 'Avant D'], ['rl', 'Arrière G'], ['rr', 'Arrière D']] as const).map(([key, lbl]) => (
-            <div className="ev-tire" key={key}>
-              <div className="ev-tire__hd">
-                <span className="ev-tire__lbl">{lbl}</span>
-              </div>
-
-              {/* Usure */}
-              <div className="ev-tire__row">
-                <span className="ev-tire__sublbl">Usure</span>
-                <span className={`ev-tire__val ${tireWearClass(tw[key])}`}>{tw[key]}%</span>
-              </div>
-              <div className="ev-tire__bar">
-                <div className="ev-tire__fill" style={{ width: `${tw[key]}%`, background: tireWearColor(tw[key]) }} />
-              </div>
-
-              {/* Pression */}
-              <div className="ev-tire__row" style={{ marginTop: 6 }}>
-                <span className="ev-tire__sublbl">Pression</span>
-                <span className={`ev-tire__val ${pressureClass(tp[key])}`}>{tp[key].toFixed(1)} bar</span>
-              </div>
-            </div>
-          ))}
+        <div className="ev-tire-map">
+          <TireCard label="AV-G" wear={tw.fl} pressure={tp.fl} />
+          <TireCard label="AV-D" wear={tw.fr} pressure={tp.fr} />
+          <TireCard label="AR-G" wear={tw.rl} pressure={tp.rl} />
+          <TireCard label="AR-D" wear={tw.rr} pressure={tp.rr} />
         </div>
       </div>
 
-      {/* ── Révision ── */}
+      {/* ── Entretien ── */}
       <div className="ev-card">
         <div className="ev-card__hd">
           <span className="ev-card__icon"><IconWrench /></span>
-          <span className="ev-card__title">Révision</span>
+          <span className="ev-card__title">Contrôle technique</span>
         </div>
         <div className="ev-grid2">
-          <EditField label="Dernière révision" value={v.lastService ?? ''} type="date" onSave={val => save('lastService', val)} />
-          <EditField label="Prochaine révision" value={v.nextService ?? ''} type="date" onSave={val => save('nextService', val)} />
+          <EditField label="Dernier entretien" value={v.lastService ?? ''} type="date" onSave={val => save('lastService', val)} />
+          <EditField label="Prochain entretien" value={v.nextService ?? ''} type="date" onSave={val => save('nextService', val)} />
         </div>
         <div className="ev-rows">
           <div className="ev-row">
-            <span className="ev-row__lbl">Dernière révision</span>
+            <span className="ev-row__lbl">Dernier entretien</span>
             <span className="ev-row__val">{fmtDate(v.lastService)}</span>
           </div>
           <div className="ev-row">
-            <span className="ev-row__lbl">Prochaine révision</span>
+            <span className="ev-row__lbl">Prochain entretien</span>
             <span className={`ev-row__val ${daysUntil(v.nextService) !== null && daysUntil(v.nextService)! < 30 ? 'ev-row__val--warn' : 'ev-row__val--ok'}`}>
               {fmtDate(v.nextService)}
             </span>
           </div>
-        </div>
-      </div>
-
-      {/* ── Contrôle technique ── */}
-      <div className="ev-card">
-        <div className="ev-card__hd">
-          <span className="ev-card__icon"><IconCalendar /></span>
-          <span className="ev-card__title">Contrôle technique</span>
-        </div>
-        <EditField label="Date du prochain CT" value={v.controleTechnique ?? ''} type="date" onSave={val => save('controleTechnique', val)} />
-        {v.controleTechnique && (
-          <div className="ev-rows">
-            <div className="ev-row">
-              <span className="ev-row__lbl">Prochain contrôle</span>
-              <span className={`ev-row__val ${ctClass(nextCtDays)}`}>{fmtDate(v.controleTechnique)}</span>
-            </div>
+          {v.nextService && (
             <div className="ev-row">
               <span className="ev-row__lbl">Dans</span>
-              <span className={`ev-row__val ${ctClass(nextCtDays)}`}>
-                {nextCtDays === null ? '—' : nextCtDays < 0 ? 'Expiré' : `${nextCtDays} jours`}
+              <span className={`ev-row__val ${ctClass(daysUntil(v.nextService))}`}>
+                {daysUntil(v.nextService) === null ? '—' : daysUntil(v.nextService)! < 0 ? 'Dépassé' : `${daysUntil(v.nextService)} jours`}
               </span>
             </div>
-          </div>
-        )}
-      </div>
-
-      {/* ── Trajets ── */}
-      <div className="ev-card">
-        <div className="ev-card__hd">
-          <span className="ev-card__icon"><IconRoute /></span>
-          <span className="ev-card__title">Derniers trajets</span>
-        </div>
-        {v.trips && v.trips.length > 0 ? (
-          <div className="ev-trips">
-            {v.trips.slice(-5).reverse().map((t, i) => (
-              <div className="ev-trip" key={i}>
-                <span className="ev-trip__icon"><IconRoad /></span>
-                <div className="ev-trip__info">
-                  <div className="ev-trip__route">
-                    {t.from && t.to ? `${t.from} → ${t.to}` : 'Trajet sans nom'}
-                  </div>
-                  <div className="ev-trip__meta">
-                    {t.date ? fmtDate(t.date) : ''}
-                    {t.duration ? ` · ${fmtDuration(t.duration)}` : ''}
-                  </div>
-                </div>
-                <span className="ev-trip__dist">{t.distance} km</span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="ev-empty">Aucun trajet enregistré</p>
-        )}
-        <div className="ev-rows">
-          <div className="ev-row">
-            <span className="ev-row__lbl">Kilométrage total</span>
-            <span className="ev-row__val">{(v.mileage ?? 0).toLocaleString('fr-FR')} km</span>
-          </div>
+          )}
         </div>
       </div>
 

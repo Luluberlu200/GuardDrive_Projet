@@ -33,6 +33,8 @@ const VehicleSchema = new mongoose.Schema({
     rr: { type: Number, default: 2.2 },
   },
 
+  lastTripDistance:   { type: Number, default: 0 },
+
   lastService:        { type: String, default: '' },
   nextService:        { type: String, default: '' },
   controleTechnique:  { type: String, default: '' },
@@ -42,5 +44,22 @@ const VehicleSchema = new mongoose.Schema({
   lat: { type: Number, default: 48.8566 },
   lng: { type: Number, default: 2.3522 },
 }, { timestamps: true });
+
+VehicleSchema.pre('findOneAndUpdate', async function () {
+  const update = this.getUpdate();
+  const dist = update.lastTripDistance;
+  if (!dist || dist <= 0) return;
+
+  const doc = await this.model.findOne(this.getFilter());
+  if (!doc) return;
+
+  const w = doc.tireWear;
+  update.tireWear = {
+    fl: Math.max(0, +(w.fl - dist / 600).toFixed(1)),
+    fr: Math.max(0, +(w.fr - dist / 600).toFixed(1)),
+    rl: Math.max(0, +(w.rl - dist / 500).toFixed(1)),
+    rr: Math.max(0, +(w.rr - dist / 500).toFixed(1)),
+  };
+});
 
 module.exports = mongoose.model('Vehicle', VehicleSchema);
