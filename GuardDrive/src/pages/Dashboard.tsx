@@ -269,12 +269,10 @@ function Dashboard() {
 
       <div className="db-page">
 
-        {/* Header: dropdown + weather */}
-        <header className="db-hero">
-          <div className="db-hero__top">
-            <VehicleDropdown />
-          </div>
-          {v.lat && v.lng && <WeatherWidget lat={v.lat} lng={v.lng} />}
+        {/* Vehicle selector */}
+        <header className="db-header">
+          <p className="db-header__label">Véhicule actif</p>
+          <VehicleDropdown />
         </header>
 
         {/* Lock status */}
@@ -294,6 +292,9 @@ function Dashboard() {
             {lockPending ? '…' : locked ? 'Verrouillé' : 'Déverrouillé'}
           </button>
         </div>
+
+        {/* Weather */}
+        {v.lat && v.lng && <WeatherWidget lat={v.lat} lng={v.lng} />}
 
         {/* Gauges grid */}
         <div className="db-gauges">
