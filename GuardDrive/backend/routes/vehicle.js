@@ -24,11 +24,12 @@ router.delete('/:id', protect, async (req, res) => {
 });
 
 router.patch('/:id', protect, async (req, res) => {
-  const allowed = ['plateNumber', 'mileage', 'lastService', 'nextService', 'controleTechnique', 'tireWear', 'tirePressureWheels', 'trips'];
+  const allowed = ['plateNumber', 'mileage', 'lastTripDistance', 'lastService', 'nextService', 'controleTechnique', 'tireWear', 'tirePressureWheels', 'trips'];
   const updates = {};
   for (const key of allowed) {
     if (req.body[key] !== undefined) updates[key] = req.body[key];
   }
+
   const vehicle = await Vehicle.findOneAndUpdate(
     { _id: req.params.id, userId: req.userId },
     updates,

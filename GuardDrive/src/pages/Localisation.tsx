@@ -83,6 +83,11 @@ function Localisation() {
 	const [address, setAddress] = useState('Chargement…');
 	const [hornActive, setHornActive] = useState(false);
 	const [lightsActive, setLightsActive] = useState(false);
+
+	function handleLights() {
+		setLightsActive(true);
+		setTimeout(() => setLightsActive(false), 2000);
+	}
 	const [userPos, setUserPos] = useState<{ lat: number; lng: number } | null>(null);
 	const [userLocError, setUserLocError] = useState(false);
 
@@ -171,7 +176,7 @@ function Localisation() {
 						<p className="loc-card__address">{address}</p>
 						{userPos && (
 							<p className="loc-card__user-pos">
-								<IconMyLocation /> Ma position active
+								<IconMyLocation /> Ma position
 							</p>
 						)}
 					</div>
@@ -181,9 +186,9 @@ function Localisation() {
 							<IconHorn />
 							<span>Klaxonner</span>
 						</button>
-						<button className={`loc-action${lightsActive ? ' loc-action--on' : ''}`} onClick={() => setLightsActive(v => !v)}>
+						<button className={`loc-action${lightsActive ? ' loc-action--on' : ''}`} onClick={handleLights} disabled={lightsActive}>
 							<IconLight />
-							<span>{lightsActive ? 'Éteindre' : 'Phares'}</span>
+							<span>{lightsActive ? 'Appel…' : 'Appel de phares'}</span>
 						</button>
 					</div>
 				</div>
