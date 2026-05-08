@@ -7,6 +7,5 @@ export interface Alert {
   message: string;
   date: string;
   status: AlertStatus;
-  read: boolean;
   vehicleId?: string | null;
 }

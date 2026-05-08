@@ -8,7 +8,6 @@ const AlertSchema = new mongoose.Schema({
   date:      { type: Date, default: Date.now },
   vehicleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle', default: null },
   ruleKey:   { type: String, default: null },
-  read:      { type: Boolean, default: false },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Alert', AlertSchema);
