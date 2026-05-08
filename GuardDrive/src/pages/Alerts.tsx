@@ -142,6 +142,7 @@ function AlertCard({
         </div>
       </div>
     </div>
+    </>
   );
 }
 

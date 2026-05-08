@@ -14,7 +14,7 @@ const navigationItems = [
 	},
 	{
 		to: '/localisation',
-		label: 'Localisation',
+		label: 'Carte',
 		icon: (
 			<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
 				<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -58,7 +58,7 @@ function MainLayout() {
 	return (
 		<div className="app-shell">
 			<header className="app-brand-static" aria-label="Identité GuardDrive">
-				<img src="/logo.png" alt="GuardDrive" className="app-brand-static__logo" />
+				<span className="app-brand-static__wordmark">Guard<span className="app-brand-static__accent">Drive</span></span>
 			</header>
 
 			<VehicleProvider>
@@ -77,7 +77,12 @@ function MainLayout() {
 							isActive ? 'mobile-navbar__link mobile-navbar__link--active' : 'mobile-navbar__link'
 						}
 					>
-						{item.icon}
+						{({ isActive }) => (
+							<span className="mobile-navbar__item">
+								{item.icon}
+								{isActive && <span className="mobile-navbar__label">{item.label}</span>}
+							</span>
+						)}
 					</NavLink>
 				))}
 			</nav>

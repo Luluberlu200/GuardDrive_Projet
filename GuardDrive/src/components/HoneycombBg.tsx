@@ -1,57 +1,67 @@
-import { useMemo } from 'react';
-
-const W = 28;
-const H = W * Math.sqrt(3);
-const COLS = 14;
-const ROWS = 18;
-
-function hex(cx: number, cy: number, r: number): string {
-  return Array.from({ length: 6 }, (_, i) => {
-    const a = (Math.PI / 180) * (60 * i - 30);
-    return `${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`;
-  }).join(' ');
+function hexPoints(cx: number, cy: number, r: number): string {
+  const h = r * 0.866;
+  return [
+    [cx,     cy - r],
+    [cx + h, cy - r * 0.5],
+    [cx + h, cy + r * 0.5],
+    [cx,     cy + r],
+    [cx - h, cy + r * 0.5],
+    [cx - h, cy - r * 0.5],
+  ].map(p => p.map(n => Math.round(n * 10) / 10).join(',')).join(' ');
 }
 
-function tier(col: number, row: number): 0 | 1 | 2 {
-  const hash = (col * 7 + row * 13) % 17;
-  if (hash === 0) return 2;
-  if (hash < 5)  return 1;
-  return 0;
-}
+type HoneycombBgProps = {
+  className?: string;
+};
 
-export function HoneycombBg({ className = 'hc-bg' }: { className?: string }) {
-  const hexes = useMemo(() => {
-    const items: { cx: number; cy: number; t: 0 | 1 | 2 }[] = [];
-    for (let row = 0; row < ROWS; row++) {
-      for (let col = 0; col < COLS; col++) {
-        const cx = col * W * 1.5 + W;
-        const cy = row * H + (col % 2 === 1 ? H / 2 : 0) + H / 2;
-        items.push({ cx, cy, t: tier(col, row) });
-      }
+export function HoneycombBg({ className = 'hc-bg' }: HoneycombBgProps) {
+  const R  = 30;
+  const DX = R * 1.732;
+  const DY = R * 1.5;
+
+  const hexes: { cx: number; cy: number; tier: 0 | 1 | 2 }[] = [];
+
+  for (let row = -1; row <= 29; row++) {
+    for (let col = -1; col <= 16; col++) {
+      const cx  = col * DX + (row % 2) * (DX / 2);
+      const cy  = row * DY;
+      const w   = Math.sin((col + row * 0.5) * 0.9) * Math.sin((row - col * 0.4) * 0.7);
+      const tier: 0 | 1 | 2 = w > 0.62 ? 2 : w > 0.12 ? 1 : 0;
+      hexes.push({ cx, cy, tier });
     }
-    return items;
-  }, []);
-
-  const vW = COLS * W * 1.5 + W;
-  const vH = ROWS * H + H;
+  }
 
   return (
     <svg
       className={className}
-      viewBox={`0 0 ${vW} ${vH}`}
+      viewBox="0 0 800 1300"
       preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
     >
       <defs>
+        <filter id="hglow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
         <radialGradient id="hc-vignette" cx="50%" cy="50%" r="70%">
           <stop offset="0%"   stopColor="transparent" />
-          <stop offset="100%" stopColor="var(--hc-vignette)" />
+          <stop offset="100%" stopColor="var(--hc-vignette, rgba(4,3,10,0.82))" />
         </radialGradient>
       </defs>
-      {hexes.map(({ cx, cy, t }, i) => (
-        <polygon key={i} points={hex(cx, cy, W * 0.54)} className={`hc hc--t${t}`} />
+
+      {hexes.map(({ cx, cy, tier }, i) => (
+        <polygon
+          key={i}
+          points={hexPoints(cx, cy, R - 1.5)}
+          className={`hc hc--t${tier}`}
+          filter={tier === 2 ? 'url(#hglow)' : undefined}
+        />
       ))}
-      <rect width="100%" height="100%" fill="url(#hc-vignette)" />
+
+      <rect x="0" y="0" width="800" height="1300" fill="url(#hc-vignette)" />
     </svg>
   );
 }
