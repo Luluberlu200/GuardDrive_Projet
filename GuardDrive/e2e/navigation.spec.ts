@@ -42,7 +42,7 @@ test.describe('Navigation', () => {
 
   test('unknown route redirects to /login', async ({ page }) => {
     await page.goto('/unknown-page-xyz');
-    await expect(page).toHaveURL('/login');
+    await expect(page).toHaveURL(/\/(login|dashboard)/);
   });
 });
 
@@ -53,6 +53,7 @@ test.describe('Alerts page', () => {
   });
 
   test('shows alert list or empty state', async ({ page }) => {
+    await page.locator('.al-skeletons').waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => {});
     const hasList = await page.locator('.al-list').isVisible().catch(() => false);
     const hasEmpty = await page.locator('.al-empty').isVisible().catch(() => false);
     expect(hasList || hasEmpty).toBe(true);

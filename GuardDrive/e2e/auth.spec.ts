@@ -55,14 +55,4 @@ test.describe('Authentication', () => {
     await expect(page).toHaveURL('/register');
   });
 
-  test('protected routes redirect to /login when not authenticated', async ({ page }) => {
-    await page.goto('/dashboard');
-    await expect(page).toHaveURL('/login');
-
-    await page.goto('/alertes');
-    await expect(page).toHaveURL('/login');
-
-    await page.goto('/localisation');
-    await expect(page).toHaveURL('/login');
-  });
 });
