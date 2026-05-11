@@ -251,23 +251,13 @@ function Dashboard() {
   useEffect(() => { api.get('/alerts').then(d => setAlertes(d.slice(0, 3))); }, []);
 
   if (loading || !v) return (
-    <div className="db-page">
-      <div className="db-loader"><span className="db-loader__spinner" /></div>
-    </div>
+    <>
+      <HoneycombBg className="hc-bg-fixed" />
+      <div className="db-page">
+        <div className="db-loader"><span className="db-loader__spinner" /></div>
+      </div>
+    </>
   );
-
-  const isLocked = v.lock === 'locked';
-
-  if (loading || !v) {
-    return (
-      <>
-        <HoneycombBg className="hc-bg-fixed" />
-        <div className="db-page">
-          <p style={{ padding: '2rem', color: 'var(--couleur-texte-faible)' }}>Chargement…</p>
-        </div>
-      </>
-    );
-  }
 
   const fuelColor = v.fuel < 20 ? '#e57373' : v.fuel < 40 ? '#fbbf24' : '#81c784';
   const battColor = v.battery < 20 ? '#e57373' : v.battery < 50 ? '#fbbf24' : '#81c784';
@@ -279,12 +269,10 @@ function Dashboard() {
 
       <div className="db-page">
 
-        {/* Header: dropdown + weather */}
-        <header className="db-hero">
-          <div className="db-hero__top">
-            <VehicleDropdown />
-          </div>
-          {v.lat && v.lng && <WeatherWidget lat={v.lat} lng={v.lng} />}
+        {/* Vehicle selector */}
+        <header className="db-header">
+          <p className="db-header__label">Véhicule actif</p>
+          <VehicleDropdown />
         </header>
 
         {/* Lock status */}
@@ -304,6 +292,9 @@ function Dashboard() {
             {lockPending ? '…' : locked ? 'Verrouillé' : 'Déverrouillé'}
           </button>
         </div>
+
+        {/* Weather */}
+        {v.lat && v.lng && <WeatherWidget lat={v.lat} lng={v.lng} />}
 
         {/* Gauges grid */}
         <div className="db-gauges">

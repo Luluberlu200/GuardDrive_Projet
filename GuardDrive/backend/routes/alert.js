@@ -17,21 +17,11 @@ router.post('/', protect, async (req, res) => {
   res.status(201).json(alert);
 });
 
-/* PATCH /api/alerts/:id/read */
-router.patch('/:id/read', protect, async (req, res) => {
-  const alert = await Alert.findOneAndUpdate(
-    { _id: req.params.id, userId: req.userId },
-    { read: true },
-    { new: true }
-  );
-  res.json(alert);
-});
-
 /* PATCH /api/alerts/:id/archive */
 router.patch('/:id/archive', protect, async (req, res) => {
   const alert = await Alert.findOneAndUpdate(
     { _id: req.params.id, userId: req.userId },
-    { status: 'archived', read: true },
+    { status: 'archived' },
     { new: true }
   );
   res.json(alert);

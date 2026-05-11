@@ -21,6 +21,7 @@ export type Vehicle = {
   tireWear: { fl: number; fr: number; rl: number; rr: number };
   tirePressureWheels: { fl: number; fr: number; rl: number; rr: number };
   temperature: number;
+  lastTripDistance: number;
   lastService: string;
   nextService: string;
   controleTechnique: string;
